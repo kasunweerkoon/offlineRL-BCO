@@ -143,11 +143,11 @@ class OffRL_Inference:
 		self.pub_end2end_action = int(choice) #False # Stop publishing end to end actions to /cmd_vel
 
 		
-
+		self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 		#model params
 		self.path = '/media/kasun/Media/offRL/dataset/' #'/home/kasun/offlineRL/dataset/'
 
-		self.model_path = '/home/spotcore/kasun_ws/src/offlineRL' #'/home/kasun/offlineRL/CQL/CQL-SAC/'
+		self.model_path = '/home/kasun/offlineRL/BC/BCO' #'/home/kasun/offlineRL/CQL/CQL-SAC/'
 		self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 		self.config = get_config()
@@ -158,7 +158,7 @@ class OffRL_Inference:
 		self.agent = Actor(state_size= 3,
                         action_size= 3,
                         hidden_size=self.config.hidden_size,
-                        device=self.device)
+                        device=self.device).to(self.device)
                         
 		#self.agent = CQLSAC(state_size= 3,
                         #action_size= 3,
@@ -279,7 +279,7 @@ class OffRL_Inference:
 			policy_out_action = self.agent.get_action(states)
 			#policy_out_action = self.agent.get_action(states, eval=True)
 
-			print("policy actions :",policy_out_action[0][0])
+			print("policy actions :",policy_out_action[0])
 
 			# self.pub_action.linear.x = np.clip(policy_out_action[0][0],-0.7,0.8)
 			# self.pub_action.linear.y = np.clip(policy_out_action[0][1],-0.5,0.5)
